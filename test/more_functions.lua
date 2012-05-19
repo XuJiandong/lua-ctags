@@ -11,3 +11,12 @@ end
 
 function T.memberFunction2(a, b, ...)
 end
+
+function outerFunction(...)
+    local function innerFunction(...)
+    end
+    local f = function()
+    end
+end
+
+
