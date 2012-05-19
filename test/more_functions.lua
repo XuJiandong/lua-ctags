@@ -19,4 +19,6 @@ function outerFunction(...)
     end
 end
 
+function T.abcdefABCDEF_:def1234567890(...)
+end
 

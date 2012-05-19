@@ -75,7 +75,7 @@ local function generate(input)
     local function parseFunction(line, ...)
         local l = line .. " " .. table.concat({...})
         -- don't accept anonymous function
-        local format = "function%s+([%w%.:]+)%s*%(.*%)"
+        local format = "function%s+([%w%.:%d_]+)%s*%(.*%)"
         local funcName = string.match(l, format)
         return funcName
     end
@@ -123,9 +123,12 @@ local function test()
     r = parseLuac(f)
     assert(r[f][1][1] == 3 and r[f][2][1] == 6 and r[f][3][1] == 9 and r[f][4][1] == 12)
     r2 = generate(r)
+    local count = 0
     for i, l in ipairs(r2) do
         assert(string.match(l, f))
+        count = count + 1
     end
+    assert(count == 7) -- anonymous function is not counted in
     ---------------------
     f = "../test/very-long-path/very-long-path/very-long-path/very_long_path.lua"
     r = parseLuac(f)
