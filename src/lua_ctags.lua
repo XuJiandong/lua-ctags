@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
--- {[1] [2]}, {[1], [2]} ...
+-- {{[1] [2]}, {[1], [2]}, ...}
 local function removeNested(loc)
     local function cover(a, b)
         return a[1] <= b[1] and a[2] >= b[2]
@@ -99,41 +99,12 @@ local function generate(input)
     return result
 end
 
-local function printUsage()
-    print("lua lua_ctags.lua <file1> <fil2> ...")
-    print("note: accept *.lua")
-end
-
-local function main(...)
-    local argv = {...}
-    local argc = select('#', ...)
-    if argc < 1 or not argv[1] then
-        return printUsage()
-    end
-    local loc = parseLuac(...)
-    if not loc then
-        return printUsage()
-    end
-    local newLoc = {}
-    for file, lines in pairs(loc) do
-        newLoc[file] = removeNested(lines)
-    end
-    local result = generate(newLoc)
-    for i, v in ipairs(result) do
-        print(v)
-    end
-end
-
-main(...)
-
-if TEST then
+local function test()
     function dump(r)
         for k, v in pairs(r) do
             print(k, "->", table.concat(v, ","))
         end
     end
-    print("Test enabled")
-
     local f, r
     ----------------
     --test removeNested
@@ -153,12 +124,42 @@ if TEST then
     assert(r[f][1][1] == 3 and r[f][2][1] == 6 and r[f][3][1] == 9 and r[f][4][1] == 12)
     r2 = generate(r)
     for i, l in ipairs(r2) do
-        print(l)
+        assert(string.match(l, f))
     end
     ---------------------
     f = "../test/very-long-path/very-long-path/very-long-path/very_long_path.lua"
     r = parseLuac(f)
     assert(r[f][1][1] == 3)
-    print("Test done")
+    print("It works!")
 end
 
+local function printUsage()
+    print("lua lua_ctags.lua <file1> <file2> ...")
+    print("note: accept *.lua. To check it works or not:")
+    print("lua lua_ctags.lua test")
+end
+
+local function main(...)
+    local argv = {...}
+    local argc = select('#', ...)
+    if argv[1] == "test" then
+        return test()
+    end
+    if argc < 1 or not argv[1] then
+        return printUsage()
+    end
+    local loc = parseLuac(...)
+    if not loc then
+        return printUsage()
+    end
+    local newLoc = {}
+    for file, lines in pairs(loc) do
+        newLoc[file] = removeNested(lines)
+    end
+    local result = generate(newLoc)
+    for _, v in ipairs(result) do
+        print(v)
+    end
+end
+
+main(...)
