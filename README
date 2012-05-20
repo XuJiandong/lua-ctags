@@ -8,5 +8,5 @@ one file:
  > lua lua_tags ../test/simple.lua > tags
 more files:
  > lua lua_tags ../test/*.lua > tags
-check:
- > lua check
+check if it works:
+ > lua lua_tags test 
