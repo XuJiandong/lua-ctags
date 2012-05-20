@@ -1,12 +1,15 @@
 By parsing output from luac program, generate tags file.
 The result is better than files from ctags.
 
-note: the nested functions and anonymous functions are removed.
+Note: the nested functions and anonymous functions are removed.
 
-sample usage:
-one file:
- > lua lua_tags ../test/simple.lua > tags
-more files:
- > lua lua_tags ../test/*.lua > tags
-check if it works:
+Sample usage:
+One file:
+ > lua lua_tags.lua ../test/simple.lua > tags
+
+More files:
+ > lua lua_tags.lua ../test/simple.lua ../test/more_functions.lua > tags
+ > lua lua_tags.lua ../test/*.lua > tags
+
+Check if it works:
  > lua lua_tags test 
