@@ -160,6 +160,7 @@ local function main(...)
         newLoc[file] = removeNested(lines)
     end
     local result = generate(newLoc)
+    table.sort(result) -- vim requires sorted result
     for _, v in ipairs(result) do
         print(v)
     end
