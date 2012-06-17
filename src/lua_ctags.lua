@@ -54,7 +54,10 @@ local function parseLuac(...)
     for line in output:lines() do
         -- match line like following and capture the starting line number(3)
         -- function <simple.lua:3,4> (1 instruction, 4 bytes at 0x8b97e40)
-        local fileName, beginLine, endLine = string.match(line, [=[function <([^:]+):(%d+),(%d+)]=])
+        -- and also this
+        -- function <f:/a/b/c.lua:158,171> 
+        -- it's possible on windows
+        local fileName, beginLine, endLine = string.match(line, [=[function <(.+):(%d+),(%d+)]=])
         if fileName and beginLine then
             if not result[fileName] then result[fileName] = {} end
             table.insert(result[fileName], {tonumber(beginLine), tonumber(endLine)})
